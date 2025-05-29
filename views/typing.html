@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #2f3b50;
+        }
+
+        .text-to-type {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #555;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 20px;
+            padding: 10px;
+            border: 2px dashed #aaa;
+            display: inline-block;
+            max-width: 90%;
+            line-height: 1.5;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2rem;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            outline: none;
+            background-color: #fafafa;
+            color: #333;
+        }
+
+        textarea:focus {
+            border-color: #4d90fe;
+        }
+
+        .stats {
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+
+        .stats span {
+            font-weight: bold;
+        }
+
+        .message {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            color: #2f9e44;
+        }
+
+        .message.error {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Typing Test</h1>
+        <div class="text-to-type" id="textToType">
+            The quick brown fox jumps over the lazy dog.
+        </div>
+        <textarea id="userInput" placeholder="Start typing here..." oninput="startTyping()"></textarea>
+        <div class="stats">
+            <p>Time: <span id="timer">0</span> seconds</p>
+            <p>Words per minute: <span id="wpm">0</span> WPM</p>
+        </div>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        let timer;
+        let startTime;
+        let timeElapsed = 0;
+        let wpm = 0;
+        let typingStarted = false;
+
+        const textToType = document.getElementById("textToType").innerText;
+        const userInput = document.getElementById("userInput");
+        const timerElement = document.getElementById("timer");
+        const wpmElement = document.getElementById("wpm");
+        const messageElement = document.getElementById("message");
+
+        function startTyping() {
+            const typedText = userInput.value;
+
+            // Start timer when the user starts typing
+            if (!typingStarted) {
+                typingStarted = true;
+                startTime = Date.now();
+                timer = setInterval(updateTimer, 1000);
+            }
+
+            // Calculate words per minute (WPM)
+            timeElapsed = Math.floor((Date.now() - startTime) / 1000);
+            const wordsTyped = typedText.trim().split(/\s+/).length;
+            wpm = Math.floor((wordsTyped / timeElapsed) * 60);
+            wpmElement.textContent = wpm;
+
+            // Check if the typed text matches the target text
+            if (typedText === textToType) {
+                clearInterval(timer);
+                messageElement.textContent = "Test Complete! Great job!";
+                messageElement.classList.remove("error");
+                messageElement.classList.add("success");
+            } else if (textToType.startsWith(typedText)) {
+                messageElement.textContent = "";
+                messageElement.classList.remove("error");
+            } else {
+                messageElement.textContent = "Oops! Try again.";
+                messageElement.classList.add("error");
+            }
+
+            // Update the timer
+            timerElement.textContent = timeElapsed;
+        }
+
+        // Reset the test when clicked (optional feature)
+        userInput.addEventListener('focus', function () {
+            messageElement.textContent = "";
+            messageElement.classList.remove("error", "success");
+        });
+    </script>
+
+</body>
+</html>

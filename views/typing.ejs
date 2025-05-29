@@ -1,0 +1,224 @@
+<%- layout("layouts/biloperets") %>
+<!-- Typing Test Page -->
+<body>
+    <style>
+        /* Container and layout styles */
+        .container {
+            width: 90%;
+            max-width: 1600px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin: 60px auto 0;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .passage {
+            font-size: 1.5rem;
+            margin: 30px 0;
+            color: #444;
+            padding: 20px;
+            background-color: #f4f4f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: left;
+            word-wrap: break-word;
+            width: 100%;
+        }
+        #test_area {
+            width: 100%;
+            height: 250px;
+            padding: 20px;
+            font-size: 1.5rem;
+            margin-top: 20px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            resize: none;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        #test_area:focus {
+            border-color: #888;
+        }
+        .result {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            font-size: 1.2rem;
+            color: #555;
+        }
+        /* Button styles */
+        #test_start, #test_done, #next-button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: white;
+            background: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 30px;
+            display: inline-block;
+        }
+        #test_done, #next-button {
+            display: none;
+        }
+    </style>
+
+    <div id="test_view" class="container">
+        <h1>Typing Speed Test with Questions</h1>
+        <div class="passage" id="passage"></div>
+        <textarea id="test_area" class="t-text ctrl" placeholder="Start typing the passage here..." oninput="calculateSpeed()" disabled></textarea>
+        <div class="result">
+            <p id="timer">Time: 20:00</p>
+            <p id="accuracy">Accuracy: 100%</p>
+            <p id="speed">Speed: 0 WPM</p>
+            <p id="question-number">Question: 1</p>
+        </div>
+        <div class="t-submit">
+            <input id="test_start" class="submit" type="button" value="Start typing test" onclick="startNewTest()">
+            <input id="test_done" class="submit" type="button" value="Submit" onclick="finishTest()">
+            <input id="next-button" class="submit" type="button" value="Next Question" onclick="nextQuestion()">
+        </div>
+    </div>
+
+    <script>
+        let timerInterval;
+        let timeRemaining = 1200; // 20 minutes
+        let startTime;
+        let correctChars = 0;
+        let incorrectChars = 0;
+        const questions = [
+            {
+                passage1: "The quick brown fox jumps over the lazy dog.",
+                passage2: "This is a simple typing test passage."
+            },
+            {
+                passage1: "EJS is a templating language used in Node.js.",
+                passage2: "It allows for the embedding of JavaScript into HTML."
+            }
+        ];
+        let currentQuestionIndex = 0;
+
+        function loadQuestion() {
+            const passageElement = document.getElementById('passage');
+            const userInput = document.getElementById('test_area');
+            let question = questions[currentQuestionIndex];
+            passageElement.innerHTML = `<div>${question.passage1}</div><div>${question.passage2}</div>`;
+            userInput.value = ""; // Clear any previous input
+        }
+
+        function calculateSpeed() {
+            const userInput = document.getElementById('test_area');
+            const accuracyElement = document.getElementById('accuracy');
+            const speedElement = document.getElementById('speed');
+            let typedText = userInput.value;
+            let passageText = `${questions[currentQuestionIndex].passage1} ${questions[currentQuestionIndex].passage2}`;
+            correctChars = 0;
+            incorrectChars = 0;
+            for (let i = 0; i < typedText.length; i++) {
+                if (typedText[i] === passageText[i]) {
+                    correctChars++;
+                } else {
+                    incorrectChars++;
+                }
+            }
+            let accuracy = ((correctChars / (correctChars + incorrectChars)) * 100).toFixed(2);
+            accuracyElement.textContent = `Accuracy: ${accuracy}%`;
+            let timeElapsed = Math.floor((Date.now() - startTime) / 1000);
+            let wpm = timeElapsed > 0 ? ((typedText.split(/\s+/).length / timeElapsed) * 60).toFixed(2) : 0;
+            speedElement.textContent = `Speed: ${wpm} WPM`;
+        }
+
+        function startTimer() {
+            const timerElement = document.getElementById('timer');
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                let minutes = Math.floor(timeRemaining / 60);
+                let seconds = timeRemaining % 60;
+                timerElement.textContent = `Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        function finishTest() {
+            const userInput = document.getElementById('test_area');
+            const accuracyElement = document.getElementById('accuracy');
+            const speedElement = document.getElementById('speed');
+            userInput.disabled = true;
+            accuracyElement.textContent = `Final Accuracy: ${accuracyElement.textContent}`;
+            speedElement.textContent = `Final Speed: ${speedElement.textContent}`;
+            document.getElementById('test_start').style.display = 'inline-block';
+            document.getElementById('test_done').style.display = 'inline-block';
+            document.getElementById('next-button').style.display = 'inline-block';
+            saveResults();
+        }
+
+        function startNewTest() {
+            const userInput = document.getElementById('test_area');
+            userInput.disabled = false;
+            userInput.focus();
+            currentQuestionIndex = 0;
+            loadQuestion();
+            startTime = Date.now();
+            startTimer();
+            document.getElementById('test_start').style.display = 'inline-block';
+            document.getElementById('test_done').style.display = 'inline-block';
+            document.getElementById('next-button').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            const userInput = document.getElementById('test_area');
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+                userInput.disabled = false;
+                userInput.focus();
+                userInput.value = '';
+            } else {
+                alert('No more questions.');
+            }
+            document.getElementById('test_start').style.display = 'inline-block';
+            document.getElementById('test_done').style.display = 'inline-block';
+            document.getElementById('next-button').style.display = 'inline-block';
+        }
+
+        async function saveResults() {
+            const speedElement = document.getElementById("speed");
+            const response = await fetch('/typing', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    time: timeRemaining,
+                    accuracy: (correctChars + incorrectChars) ? (correctChars / (correctChars + incorrectChars) * 100).toFixed(2) : 0,
+                    speed: speedElement.textContent.split(' ')[1]
+                }),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Result saved:', data);
+                document.getElementById('test_done').style.display = 'none';
+                document.getElementById('next-button').style.display = 'block';
+            } else {
+                console.error('Error saving result:', response.statusText);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadQuestion();
+            document.getElementById('test_start').style.display = 'inline-block';
+            document.getElementById('test_done').style.display = 'inline-block';
+            document.getElementById('next-button').style.display = 'inline-block';
+        });
+    </script>
+</body>
+</html>

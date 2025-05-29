@@ -1,0 +1,132 @@
+<%- layout("layouts/biloperets") %>
+<br>
+<!-- Assuming you have a layout template for student -->
+
+<section class="content">
+    <div class="container-fluid">
+        <!-- Info boxes -->
+        <div class="row">
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box js-tilesUpcomingExams">
+                    <span class="info-box-icon bg-info elevation-1"><i class="fas fa-user-graduate"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Upcoming Exams</span>
+                       
+                        <span class="info-box-number" id="total-upcoming-exams"><%= upcomingExamsCount %></span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3 js-tilesOngoingExams">
+                    <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-user-friends"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">On Going Exams</span>
+                        <span class="info-box-number" id="total-ongoing-exams"><%= ongoingExamsCount %></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fix for small devices only -->
+            <div class="clearfix hidden-md-up"></div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3 js-tilesResults">
+                    <span class="info-box-icon bg-success elevation-1"><i class="fas fa-user-lock"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Recent Exams</span>
+                        <span class="info-box-number" id="total-recent-exams"><%= recentExamsCount %></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <div class="info-box mb-3 js-tilesTransactions">
+                    <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-users"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Transactions</span>
+                        <span class="info-box-number" id="total-transactions"> not availabe</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Exams Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" id="upcoming-exams-table">
+                    <div class="card-header border-transparent">
+                        <h3>Upcoming Exams</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table m-0" id="upcoming-exams-datatable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Exam Code</th>
+                        
+                                        <th>Class</th>
+                                       
+                                        <th>Duration</th>
+                                        <th>Marks</th>
+                                        <th>
+                                            Due Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% upcomingExams.forEach((exam, index) => { %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td><%= exam._id %></td>
+                                        <td><%= exam.language %></td>
+                                        <td><%= exam.marks %></td>
+                                        <td><%= exam.type %></td>
+                                        <td><%= exam.timerDuration%></td>
+                                        <td><%= exam.marks %></td>
+                                        <td><%= new Date(exam.
+                                            dueDate).toLocaleString() %></td>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer clearfix">
+                        <a href="/student/exams/upcoming" class="btn btn-sm btn-secondary float-right">View All Exams</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your Packages Table -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" id="exam-package-table">
+                    <div class="card-header border-transparent">
+                        <h3>Your Packages</h3>
+                    </div>
+                    <div class="card-body p-2">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="examPackageDatatable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Image</th>
+                                        <th>Package Name</th>
+                                        <th>Exams</th>
+                                        <th>Amount</th>
+                                        <th>Purchase Date</th>
+                                    </tr>
+                                </thead>
+                                
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer clearfix">
+                        <a href="/student/packages/buy" class="btn btn-sm btn-secondary float-right">Buy New Package</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

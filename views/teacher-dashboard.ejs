@@ -1,0 +1,193 @@
+<%- layout("layouts/biloperets") %>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Student Count -->
+        <div class="col-lg-4 col-6">
+            <div id="studentsTile" class="small-box bg-warning">
+                <div class="inner">
+                    <h3><%= studentCount %></h3>
+                    <p>Total Students</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-graduation-cap"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Registrations (Optional, show this only if needed) -->
+        <div class="col-lg-4 col-6">
+            <div id="registrationsTile" class="small-box bg-secondary">
+                <div class="inner">
+                    <h3>Registration</h3>
+                    <p>Today's Registrations</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Information Section -->
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Teacher Profile</h3>
+                </div>
+                <div class="card-body">
+                  <% if (profile) { %>
+                    <ul>
+                        <li><strong>Username:</strong> <%= profile.username %></li>
+                        <li><strong>Email:</strong> <%= profile.email %></li>
+                        <li><strong>Role:</strong> <%= profile.role %></li>
+                    </ul>
+                <% } else { %>
+                    <p>Profile not found or unavailable.</p>
+                <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Today's Tests -->
+        <div class="col-lg-6 col-12">
+            <div class="card">
+                <div class="card-header border-transparent">
+                    <h3>Today's Tests</h3>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th>Test Title</th>
+                                    <th>Start Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% todayTests.forEach(test => { %>
+                                    <tr>
+                                        <td><%= test.text %></td>
+                                        <td><%= new Date(test.dueDate).toLocaleString() %></td>
+                                        <td>Active</td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <a href="/teacher/tests/today" class="btn btn-sm btn-secondary float-right">View All Tests</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Tests -->
+        <div class="col-lg-6 col-12">
+            <div class="card">
+                <div class="card-header border-transparent">
+                    <h3>Upcoming Tests</h3>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th>Test Title</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% upcomingTests.forEach(test => { %>
+                                    <tr>
+                                        <td><%= test.text %></td>
+                                        <td><%= new Date(test.dueDate).toLocaleString() %></td>
+                                        <td>Upcoming</td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <a href="/teacher/tests/upcoming" class="btn btn-sm btn-secondary float-right">View All Tests</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submissions and Results -->
+    <div class="row">
+        <div class="col-lg-12 col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Submissions & Results</h3>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table m-0">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Test Title</th>
+                                    <th>Score</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% results.forEach(result => { %>
+                                    <tr>
+                                        <td><%= result.student %></td>
+                                        <td><%= result.testTitle %></td>
+                                        <td><%= result.score %></td>
+                                        <td><%= result.status %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <a href="/teacher/submissions" class="btn btn-sm btn-secondary float-right">View All Submissions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+  .table-responsive {
+      overflow-x: auto;
+  }
+
+  table {
+      width: 100%; /* Make table width take up full container width */
+      table-layout: auto; /* Auto layout allows the table to adjust based on content */
+  }
+
+  th, td {
+      padding: 20px; /* Increase padding for more space */
+      text-align: center;
+      word-wrap: break-word; /* Allow wrapping of long text to avoid overflow */
+  }
+
+  th {
+      background-color: #f8f9fa;
+  }
+
+  /* Adjust column widths based on content */
+  td, th {
+      min-width: 200px; /* Ensure columns are wide enough */
+  }
+
+  .container {
+      max-width: 100%; /* Ensure the container takes up full width */
+      padding: 0 15px; /* Optional: Add padding to the container */
+  }
+</style>
+

@@ -1,0 +1,251 @@
+<%- layout("layouts/biloperets") %>
+<link rel="stylesheet" href="/admin/admin3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <div data-pym-src="https://www.jdoodle.com/embed/v1/72bf3e0cbb6f6a86"></div>
+    
+
+<body>
+    <div class="container">
+        <h1 class="title">Code Exam</h1>
+        <div class="exam-container">
+            <div class="questions-section">
+                <h2>Question:</h2>
+                <% if (question) { %>
+                    <div class="question">
+                        <h3>Question:</h3>
+                        <p><%= question.text %></p>
+                        <p>Due Date: <%= question.dueDate.toLocaleString() %></p>
+                        <p>Timer Duration: <%= question.timerDuration %> seconds</p>
+                    </div>
+                    <div id="timer">Time remaining: <span id="time-remaining"><%= question.timerDuration %></span> seconds</div>
+                <% } else { %>
+                    <p>No question available.</p>
+                <% } %>
+            </div>
+
+            <div class="code-output-area">
+                <div class="code-area">
+                    <h2>Your Code:</h2>
+                    <form id="code-form">
+                        <textarea id="code" name="code"></textarea>
+                        <select name="language" required>
+                            <option value="python">Python</option>
+                            <option value="java">Java</option>
+                            <option value="cpp">C++</option>
+                            <option value="csharp">C#</option>
+                            <option value="javascript">JavaScript</option>
+                        </select>
+                        <button type="submit" class="run-button">Run Code</button>
+                    </form>
+                   
+                </div>
+                <button class="btn btn-primary mb-3" onclick="loadJDoodle('jdoodle1')">Python</button>
+                <div class="result-area">
+                    <h2>Output:</h2>
+                    <pre id="output" class="output-area"></pre>
+                </div>
+            </div>
+
+            <!-- Chart Area -->
+            <div class="chart-area">
+                <h2>Execution Metrics</h2>
+                <canvas id="execution-metrics-chart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Time Complexity Section -->
+            <div class="time-complexity-section">
+                <h3>Time Complexity</h3>
+                <label for="best-case">Best Case:</label>
+                <input type="text" id="best-case" placeholder="Best case complexity">
+                <br>
+                <label for="average-case">Average Case:</label>
+                <input type="text" id="average-case" placeholder="Average case complexity">
+                <br>
+                <label for="worst-case">Worst Case:</label>
+                <input type="text" id="worst-case" placeholder="Worst case complexity">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                lineNumbers: true,
+                mode: "javascript",  // Default to JavaScript mode
+                theme: "default",
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true
+            });
+
+            document.querySelector("select[name=language]").addEventListener("change", function() {
+                const language = this.value;
+                let mode = "javascript"; // Default to JavaScript
+
+                switch (language) {
+                    case "python":
+                        mode = "python";
+                        break;
+                    case "java":
+                        mode = "java";
+                        break;
+                    case "cpp":
+                        mode = "clike";
+                        break;
+                    case "csharp":
+                        mode = "clike";
+                        break;
+                    case "javascript":
+                        mode = "javascript";
+                        break;
+                }
+
+                editor.setOption("mode", mode);
+            });
+
+            let timeRemaining = <%= question.timerDuration %> || 0;
+            const timerElement = document.getElementById("time-remaining");
+            const runButton = document.querySelector(".run-button");
+
+            const timerInterval = setInterval(() => {
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time's up!");
+                    runButton.disabled = true; // Disable the run button when time is up
+                } else {
+                    timerElement.textContent = timeRemaining;
+                    timeRemaining--;
+                }
+            }, 1000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+            // Chart for Execution Metrics (Execution Time, CPU Time, Memory)
+            const ctx = document.getElementById('execution-metrics-chart').getContext('2d');
+            const executionMetricsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Execution Time', 'CPU Time', 'Memory'],
+                    datasets: [{
+                        label: 'Execution Metrics',
+                        data: [0, 0, 0],  // Initialize with zero values
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Handle code execution
+            document.getElementById("code-form").addEventListener("submit", function(event) {
+                event.preventDefault();
+                const code = editor.getValue();
+                const language = document.querySelector("select[name=language]").value;
+                const versionIndex = "0"; // Adjust based on your language
+
+                axios.post("/run-codes", { script: code, language, versionIndex })
+                    .then(response => {
+                        const { output, executionTime, cpuTime, memory } = response.data;
+
+                        if (output && output !== "") {
+                            document.getElementById("output").textContent = output;
+                        } else {
+                            document.getElementById("output").textContent = "No output returned";
+                        }
+
+                        // Update the chart with the received data
+                        if (executionTime !== undefined) {
+                            executionMetricsChart.data.datasets[0].data[0] = executionTime;
+                        }
+
+                        if (cpuTime !== undefined) {
+                            executionMetricsChart.data.datasets[0].data[1] = cpuTime;
+                        }
+
+                        if (memory !== undefined) {
+                            executionMetricsChart.data.datasets[0].data[2] = memory;
+                        }
+
+                        executionMetricsChart.update();
+                    })
+                    .catch(error => {
+                        console.error("Error running the code:", error);
+                        document.getElementById("output").textContent = "Error executing code";
+                    });
+            });
+        });
+        function loadJDoodle(jdoodleId) {
+            // Clear any previous content from the container
+            const container = document.getElementById('jdoodle-container');
+            container.innerHTML = '';
+
+            // Select the correct JDoodle URL based on the button clicked
+            let jdoodleUrl;
+            if (jdoodleId === 'jdoodle1') {
+                jdoodleUrl = "https://www.jdoodle.com/embed/v1/f573a3028cb6f5a8";
+                
+            } else if (jdoodleId === 'jdoodle2') {
+                jdoodleUrl = "https://www.jdoodle.com/embed/v1/6a7f909e6974f0e0";
+            } else if (jdoodleId === 'jdoodle3') {
+                jdoodleUrl = "https://www.jdoodle.com/embed/v1/64ba3105b2af5a59";
+            }
+            else if (jdoodleId === 'jdoodle4') {
+                jdoodleUrl = "https://www.jdoodle.com/embed/v1/e75c6a5023dc621d";
+            }
+            else if (jdoodleId === 'jdoodle5') {
+                jdoodleUrl = "https://www.jdoodle.com/embed/v1/1a269d0d06c23135";
+            }
+            else if (jdoodleId === 'jdoodle6') {
+                jdoodleUrl = "https://www.jdoodle.com/embed/v1/a2d07a51d3b5618c";
+            }
+            else if (jdoodleId === 'jdoodle7') {
+                jdoodleUrl = "https://www.jdoodle.com/embed/v1/fa3d50220a2727f7";
+            }
+
+            // Insert the JDoodle div element
+            container.innerHTML = `<div data-pym-src="${jdoodleUrl}"></div>`;
+            
+            // Create a new script element for the JDoodle script
+            const script = document.createElement('script');
+            script.src = "https://www.jdoodle.com/assets/jdoodle-pym.min.js";
+            script.type = "text/javascript";
+            
+            // Append the script to the container
+            container.appendChild(script);
+        }
+    </script>
+</body>

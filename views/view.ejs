@@ -1,0 +1,20 @@
+
+<%  layout("/layouts/biloperets.ejs") %>
+
+
+
+ <div class="container">
+        <h1>User Profile</h1>
+        <div class="profile-card">
+            <img src="/uploads/<%= profile.profilePic %>" alt="Profile Picture" class="profile-pic">
+
+            <h2><%= profile.name %></h2>
+            <p><strong>Username:</strong> <%= profile.username %></p>
+            <p><strong>Father's Name:</strong> <%= profile.fatherName %></p>
+            <p><strong>Gender:</strong> <%= profile.gender %></p>
+            <p><strong>Phone:</strong> <%= profile.phone %></p>
+            
+            <!-- Edit Profile Button -->
+            <a href="/profile" class="edit-button">Edit Profile</a>
+        </div>
+    </div>

@@ -1,0 +1,105 @@
+<% layout("/layouts/biloperets.ejs") %>
+<link rel="stylesheet" href="/admin/admin1.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMG1G/S0jZ5z5z/9eM5PSSjD10iAnjD8/FAm2D" crossorigin="anonymous">
+
+<!-- Inline styles for consistency (optional if already in your CSS file) -->
+<style>
+  /* Flex container for action icons */
+  .action-icons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+  
+  /* Uniform icon size for edit and delete actions */
+  .action-icon-img {
+      width: 30px;   /* Adjust as needed */
+      height: 30px;  /* Adjust as needed */
+      vertical-align: middle;
+  }
+  
+  /* Icon size for export buttons */
+  .icon {
+      width: 24px;   /* Adjust as needed */
+      height: 24px;  /* Adjust as needed */
+      vertical-align: middle;
+  }
+</style>
+
+<body>
+    <div class="container">
+        <h1 class="page-title">Student List</h1>
+
+        <div class="export-import">
+            <!-- Export Options using Icons -->
+            <form action="/students/export/csv" method="POST">
+                <button type="submit" class="export-button" title="Export CSV">
+                    <img src="/icons/icons8-csv-96.png" alt="Export CSV" class="icon">
+                </button>
+            </form>
+
+            <form action="/students/export/excel" method="POST">
+                <button type="submit" class="export-button" title="Export Excel">
+                    <img src="/icons/icons8-excel-144.png" alt="Export Excel" class="icon">
+                </button>
+            </form>
+
+            <form action="/students/export/pdf" method="POST">
+                <button type="submit" class="export-button" title="Export PDF">
+                    <img src="/icons/icons8-pdf-96.png" alt="Export PDF" class="icon">
+                </button>
+            </form>
+
+            <!-- Add Student Button (remains textual) -->
+            <form action="/add-student" method="POST">
+                <button type="submit" class="add-student-button">Add Student</button>
+            </form>
+        </div>
+
+        <table class="student-table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Mobile No.</th>
+                    <th>Language</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% students.forEach(student => { %>
+                    <tr>
+                        <td><%= student.firstName %></td>
+                        <td><%= student.lastName %></td>
+                        <td><%= student.user.email %></td>
+                        <td><%= student.mobileNo %></td>
+                        <% if (student.languagePreference === null){ %>
+                        <td>Typing</td>
+                        <% } else { %>
+                        <td><%= student.languagePreference %></td>
+                        <% } %>
+                        <td>
+                            <!-- Group the Edit and Delete icons together -->
+                            <div class="action-icons">
+                                <a href="/edit-student/<%= student._id %>" class="action-icon" title="Edit Student">
+                                    <img src="/icons/icons8-edit-150.svg" class="action-icon-img" alt="Edit">
+                                </a>
+                                <form action="/delete-student/<%= student._id %>" method="POST" style="display:inline;">
+                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this student?');" 
+                                            class="delete-button" title="Delete Student" 
+                                            style="background:none; border:none; padding:0;">
+                                        <img src="/icons/icons8-delete-80.png" class="action-icon-img" alt="Delete">
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <a href="/add-student" class="add-new-student">Add New Student</a>
+    </div>
+</body>
+</html>

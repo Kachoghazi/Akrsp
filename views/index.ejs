@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Roles</title>
+    <link rel="stylesheet" href="/style4.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        h2 i {
+            margin-right: 10px; /* Space between the icon and text */
+            font-size: 2em; /* Increase size */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>User Roles</h1>
+    </header>
+    <main>
+        <% if (user) { %>
+            <% if (user.role === 'admin') { %>
+                <section class="role admin">
+                    <h2><i class="fas fa-user-shield"></i> Admin</h2>
+                    <p>Manage users, settings, and system configurations.</p>
+                    <button onclick="location.href='/admin'">View Admin Panel</button>
+                </section>
+            <% } %>
+            <% if (user.role === 'instructor') { %>
+                <section class="role instructor">
+                    <h2><i class="fas fa-chalkboard-teacher"></i> Instructor</h2>
+                    <p>Create courses, grade assignments, and manage student progress.</p>
+                    <button onclick="location.href='/instructor'">View Instructor Panel</button>
+                </section>
+            <% } %>
+            <% if (user.role === 'student') { %>
+                <section class="role student">
+                    <h2><i class="fas fa-user-graduate"></i> Student</h2>
+                    <p>Access courses, submit assignments, and track progress.</p>
+                    <button onclick="location.href='/student'">View Student Dashboard</button>
+                </section>
+            <% } %>
+        <% } else { %>
+            <p>Please log in to access your role-specific features.</p>
+        <% } %>
+    </main>
+</body>
+</html>

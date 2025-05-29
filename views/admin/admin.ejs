@@ -1,0 +1,57 @@
+<% layout("/layouts/biloperets.ejs") %>
+<link rel="stylesheet" href="/admin/admin.css">
+
+<body>
+    <div class="container">
+        <h1>Register as Teacher</h1>
+        <form action="/add-teacher" method="POST">
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="middleName">Middle Name (optional):</label>
+                <input type="text" id="middleName" name="middleName">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="fatherName">Father Name:</label>
+                <input type="text" id="fatherName" name="fatherName" required>
+            </div>
+            <div class="form-group">
+                <label for="motherName">Mother Name (optional):</label>
+                <input type="text" id="motherName" name="motherName">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="mobileNo">Mobile No.:</label>
+                <input type="text" id="mobileNo" name="mobileNo" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="passwordVerify">Password Verify:</label>
+                <input type="password" id="passwordVerify" name="passwordVerify" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea id="address" name="address"></textarea>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <% if (error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
+        <% if (success) { %>
+            <p class="success"><%= success %></p>
+        <% } %>
+    </div>
+</body>

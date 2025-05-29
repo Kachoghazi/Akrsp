@@ -1,0 +1,121 @@
+<%- layout("layouts/biloperets") %>
+<link rel="stylesheet" href="/admin/admin3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<body>
+    <div class="container">
+        <h1 class="title">Code Exam</h1>
+        <div class="exam-container">
+            <div class="questions-section">
+                <h2>Question:</h2>
+                <% if (question) { %>
+                    <div class="question">
+                        <h3>Question:</h3>
+                        <p><%= question.text %></p>
+                        <p>Due Date: <%= question.dueDate.toLocaleString() %></p>
+                        <p>Timer Duration: <%= question.timerDuration %> seconds</p>
+                        <p>Language: <%= question.language %></p>
+                        <p>Marks: <%= question.marks %></p>
+                    </div>
+                    <div id="timer">Time remaining: <span id="time-remaining"><%= question.timerDuration %></span> seconds</div>
+                <% } else { %>
+                    <p>No question available.</p>
+                <% } %>
+            </div>
+
+            <div class="code-output-area">
+                <div class="code-area">
+                    <form id="code-form" method="POST" action="/submit-code">
+                        <input type="hidden" name="questionId" value="<%= question._id %>"> <!-- Pass the questionId -->
+                        <textarea id="code" name="code"></textarea>
+                        <select name="language" required>
+                            <option value="python" <%= question && question.language === 'python' ? 'selected' : '' %>>Python</option>
+                            <option value="java" <%= question && question.language === 'java' ? 'selected' : '' %>>Java</option>
+                            <option value="cpp" <%= question && question.language === 'cpp' ? 'selected' : '' %>>C++</option>
+                            <option value="csharp" <%= question && question.language === 'csharp' ? 'selected' : '' %>>C#</option>
+                            <option value="javascript" <%= question && question.language === 'javascript' ? 'selected' : '' %>>JavaScript</option>
+                        </select>
+                        <button type="button" id="run-code" class="run-button">Run Code</button>
+                        <button type="submit" id="submit-code" class="submit-button">Submit Code</button>
+                    </form>
+                </div>
+
+                <div class="result-area">
+                    <h2>Output:</h2>
+                    <div class="output-container">
+                        <pre id="output" class="output-text"></pre>
+                    </div>
+                    <div class="metrics">
+                        <div class="metric">
+                            <span class="metric-title">Execution Time:</span>
+                            <span id="execution-time">-</span> ms
+                        </div>
+                        <div class="metric">
+                            <span class="metric-title">CPU Time:</span>
+                            <span id="cpu-time">-</span> ms
+                        </div>
+                        <div class="metric">
+                            <span class="metric-title">Memory Usage:</span>
+                            <span id="memory-usage">-</span> KB
+                        </div>
+                        <div class="metric">
+                            <span class="metric-title">Marks:</span>
+                            <span id="marks">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize CodeMirror editor with a default language mode (JavaScript)
+            const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                lineNumbers: true,
+                mode: "javascript",  // Default to JavaScript
+                theme: "default",
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true,
+            });
+
+            // Handle Run Code button click
+            document.getElementById("run-code").addEventListener("click", function(event) {
+                event.preventDefault();
+                const code = editor.getValue();  // Get the code from CodeMirror
+                const language = document.querySelector("select[name=language]").value;
+
+                // Send the code to the server for execution
+                axios.post("/run-codes", { script: code, language, questionId: "<%= question._id %>" })
+                    .then(response => {
+                        const { output, executionTime, cpuTime, memory, marks } = response.data;
+
+                        // Display output or error message
+                        if (!output) {
+                            document.getElementById("output").textContent = "No output returned or execution failed.";
+                        } else {
+                            document.getElementById("output").textContent = output;
+                        }
+                        document.getElementById("execution-time").textContent = executionTime || "-";
+                        document.getElementById("cpu-time").textContent = cpuTime || "-";
+                        document.getElementById("memory-usage").textContent = memory || "-";
+                        document.getElementById("marks").textContent = marks || "-";
+                    })
+                    .catch(error => {
+                        console.error("Error running the code:", error);
+                        // Display a user-friendly error message
+                        document.getElementById("output").textContent = `Error: ${error.response?.data?.error || "Unknown error"}`;
+                        document.getElementById("execution-time").textContent = "-";
+                        document.getElementById("cpu-time").textContent = "-";
+                        document.getElementById("memory-usage").textContent = "-";
+                        document.getElementById("marks").textContent = "-";
+                    });
+            });
+        });
+    </script>
+
+</body>

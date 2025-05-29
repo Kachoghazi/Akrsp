@@ -1,0 +1,79 @@
+<%- layout("layouts/biloperets") %>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Ensure the table occupies full width -->
+        <div class="col-lg-12 col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <div id="resultDatatable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                        <table id="resultDatatable" class="table table-bordered table-striped" style="width: 100%;">
+                            <tbody>
+                                <% if (results.length > 0) { %>
+                                    <h2>Typing Test Results</h2>
+                                    <table class="table table-striped table-bordered" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Student Name</th>
+                                                <th>Time</th>
+                                                <th>Accuracy</th>
+                                                <th>Speed</th>
+                                                <th>Question Number</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% results.forEach((result, index) => { %>
+                                                <tr>
+                                                    <td><%= index + 1 %></td>
+                                                    <!-- Display the student's name from the populated 'user' field -->
+                                                    <td>
+                                                      <% if (result.user && result.user.email) { %>
+                                                          <%= result.user.username %>
+                                                      <% } else { %>
+                                                          No user data available
+                                                      <% } %>
+                                                  </td>
+                                                    <td><%= result.time %>s</td>
+                                                    <td><%= result.accuracy %>%</td>
+                                                    <td><%= result.speed %> WPM</td>
+                                                    <td><%= result.questionNumber %></td>
+                                                </tr>
+                                            <% }); %>
+                                        </tbody>
+                                    </table>
+                                <% } else { %>
+                                    <p>No typing test results found.</p>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add custom CSS styles for further adjustments -->
+<style>
+    table {
+        width: 100%;
+        table-layout: fixed; /* Makes table columns have the same width */
+    }
+
+    th, td {
+        padding: 15px; /* Adjust padding for better spacing */
+        text-align: center; /* Center-align text in table cells */
+    }
+
+    /* Optionally, customize the header styling */
+    th {
+        background-color: #f8f9fa;
+    }
+
+    /* Make sure it stays responsive */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+</style>

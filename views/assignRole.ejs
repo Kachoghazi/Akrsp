@@ -1,0 +1,27 @@
+<%- layout("layouts/biloperets.ejs") %>
+
+<head>
+  <style>
+    .container { padding: 20px; }
+    .input-group { font-size: 1.1rem; }
+    .btn { padding: 10px; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Assign Role to User: <%= user.username %></h2>
+    <!-- Ensure the userId is passed into the form action URL -->
+    <form action="/assign-role/<%= userId %>" method="POST">
+      <div class="input-group mb-3">
+        <label for="role">Select Role:</label>
+        <select name="role" class="form-control" required>
+          <% roles.forEach(role => { %>
+            <option value="<%= role.name %>"><%= role.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Assign Role</button>
+    </form>
+  </div>
+</body>

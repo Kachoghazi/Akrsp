@@ -1,0 +1,112 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styles */
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Export/Import section styles */
+.export-import {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.export-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.export-button .icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+/* Action button styles */
+/* Container for action icons */
+.action-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;  /* Adjust spacing between icons as needed */
+  }
+  
+  /* Set a uniform size for both edit and delete icons */
+  .action-icon-img {
+    width: 30px;    /* Adjust to your preferred size */
+    height: 30px;   /* Adjust to your preferred size */
+    vertical-align: middle;
+  }
+  
+.add-student-button {
+    background-color: #28a745; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px; /* More padding for visibility */
+    font-size: 16px; /* Larger font size */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 15px; /* Space between buttons */
+}
+
+.add-student-button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+.delete-icon {
+width: 36px; /* Adjust size as needed */
+    height: 36px; /* Adjust size as needed */
+    vertical-align: middle; /* Align the icon properly */
+    margin-right: 5px; /* Space between the icon and text */
+}
+
+
+/* Button styles */
+button {
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}

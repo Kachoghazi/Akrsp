@@ -1,0 +1,70 @@
+<% layout("/layouts/biloperets.ejs") %>
+<link rel="stylesheet" href="/admin/admin.css">
+<body>
+    <div class="container">
+        <h1>Edit Student</h1>
+        
+        <form action="/edit-student/<%= student._id %>" method="POST">
+            <div>
+                <label>First Name:</label>
+                <input type="text" name="firstName" value="<%= student.firstName %>" required>
+            </div>
+            <div>
+                <label>Last Name:</label>
+                <input type="text" name="lastName" value="<%= student.lastName %>" required>
+            </div>
+            <div>
+                <label>College Name:</label>
+                <input type="text" name="collegeName" value="<%= student.collegeName %>" required>
+            </div>
+            <div>
+                <label>College City:</label>
+                <input type="text" name="collegeCity" value="<%= student.collegeCity %>" required>
+            </div>
+            <div>
+                <label>Father's Name:</label>
+                <input type="text" name="fatherName" value="<%= student.fatherName %>" required>
+            </div>
+            <div>
+                <label>Mother's Name:</label>
+                <input type="text" name="motherName" value="<%= student.motherName %>" required>
+            </div>
+            <div>
+                <label>Mobile No:</label>
+                <input type="text" name="mobileNo" value="<%= student.mobileNo %>" required>
+            </div>
+            <div>
+                <label>State:</label>
+                <input type="text" name="state" value="<%= student.state %>" required>
+            </div>
+            <div>
+                <label>City:</label>
+                <input type="text" name="city" value="<%= student.city %>" required>
+            </div>
+            <div>
+                <label>Address:</label>
+                <textarea name="address" required><%= student.address %></textarea>
+            </div>
+            <div>
+                <label for="languagePreference">Preferred Language:</label>
+                <select id="languagePreference" name="languagePreference" required>
+                    <option value="C++">C++</option>
+                    <option value="Python">Python</option>
+                    <option value="C#">C#</option>
+                    <option value="Ruby">Ruby</option>
+                    <option value="java">java</option>
+                    <option value="javascript">javascript</option>
+                    
+                </select>
+            </div>
+            <button type="submit">Update Student</button>
+        </form>
+        <% if (error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
+        <% if (success) { %>
+            <p class="success"><%= success %></p>
+        <% } %>
+     
+    </div>
+</body>

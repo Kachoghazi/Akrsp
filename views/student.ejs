@@ -1,0 +1,112 @@
+<% layout("/layouts/biloperets.ejs") %>
+<link rel="stylesheet" href="/admin/admin4.css">
+
+<body>
+    <div class="container">
+        <h1>Add New Student</h1>
+        <form action="/add-student" method="POST">
+            <div>
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div>
+                <label for="lastName">Last Name (optional):</label>
+                <input type="text" id="lastName" name="lastName">
+            </div>
+            <div>
+                <label for="collegeName">College Name:</label>
+                <input type="text" id="collegeName" name="collegeName" required>
+            </div>
+            <div>
+                <label for="collegeCity">College City:</label>
+                <input type="text" id="collegeCity" name="collegeCity" required>
+            </div>
+            <div>
+                <label for="fatherName">Father's Name:</label>
+                <input type="text" id="fatherName" name="fatherName" required>
+            </div>
+            <div>
+                <label for="motherName">Mother's Name (optional):</label>
+                <input type="text" id="motherName" name="motherName">
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <label for="mobileNo">Mobile No:</label>
+                <input type="text" id="mobileNo" name="mobileNo" required>
+            </div>
+            <div>
+                <label for="state">State:</label>
+                <input type="text" id="state" name="state" required>
+            </div>
+            <div>
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" required>
+            </div>
+            <div>
+                <label for="address">Address:</label>
+                <textarea id="address" name="address"></textarea>
+            </div>
+
+            <!-- Choose Language or Typing Test Section -->
+            <div>
+                <label for="selectionOption">Choose Option:</label>
+                <select id="selectionOption" name="selectionOption" required onchange="toggleFields()">
+                    <option value="">Select Option</option>
+                    <option value="language">Programming Language</option>
+                    <option value="typing">Typing Test</option>
+                </select>
+            </div>
+
+            <!-- Programming Language Section (Initially Hidden) -->
+            <div id="languageSection" style="display: none;">
+                <label for="languagePreference">Preferred Language:</label>
+                <select id="languagePreference" name="languagePreference">
+                    <option value="">Select Language</option>
+                    <option value="C++">C++</option>
+                    <option value="Python">Python</option>
+                    <option value="C#">C#</option>
+                    <option value="Ruby">Ruby</option>
+                    <option value="Java">Java</option>
+                    <option value="JavaScript">JavaScript</option>
+                </select>
+            </div>
+
+            <!-- Typing Test Section (Initially Hidden) -->
+            <div id="typingSection" style="display: none;">
+                <p>You have selected Typing Test. No further details required.</p>
+            </div>
+
+            <button type="submit">Add Student</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleFields() {
+            const selection = document.getElementById("selectionOption").value;
+            const languageSection = document.getElementById("languageSection");
+            const typingSection = document.getElementById("typingSection");
+    
+            // Hide both sections initially
+            languageSection.style.display = "none";
+            typingSection.style.display = "none";
+    
+            // Show language section if 'language' is selected
+            if (selection === "language") {
+                languageSection.style.display = "block";
+            }
+    
+            // Show typing section if 'typing' is selected
+            if (selection === "typing") {
+                typingSection.style.display = "block";
+            }
+        }
+    </script>
+    
+</body>

@@ -1,0 +1,172 @@
+<%- layout("layouts/biloperets") %>
+
+<!-- Page Content -->
+<div class="container-fluid">
+
+  <!-- Row for Statistics Tiles -->
+  <div class="row mb-4">
+    <!-- Teachers Tile -->
+    <div class="col-lg-3 col-6">
+      <div id="teachersTile" class="small-box bg-danger">
+        <div class="inner">
+          <h3><%= teacherCount %></h3>
+          <p>Total Teachers</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-chalkboard-teacher"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Students Tile -->
+    <div class="col-lg-3 col-6">
+      <div id="studentsTile" class="small-box bg-warning">
+        <div class="inner">
+          <h3><%= studentCount %></h3>
+          <p>Total Students</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-graduation-cap"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Coding Test Students Tile -->
+    <div class="col-lg-3 col-6">
+      <div id="currentexamStudentTile" class="small-box bg-primary">
+        <div class="inner">
+          <h3><%= activeTestCount %></h3>
+          <p>Active Coding Test Students</p>
+        </div>
+        <div class="icon">
+          <i class="fa fa-user-friends"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row for Active Coding Tests -->
+  <div class="row mb-4">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <h3>Active Coding Tests</h3>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table m-0">
+              <thead>
+                <tr>
+                  <th>Test Code</th>
+                  <th>Title</th>
+                  <th>Marks</th>
+                  <th>Students Enrolled</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% activeTests.forEach(test => { %>
+                  <tr>
+                    <td><%= test._id %></td>
+                    <td><%= test.text || 'No Title' %></td>
+                    <td>
+                      <span class="badge <%= test.marks === 'Beginner' ? 'badge-success' : 'badge-warning' %>">
+                        <%= test.marks %>
+                      </span>
+                    </td>
+                    <td><%= activeTestCount %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer clearfix">
+          <a href="#" class="btn btn-sm btn-secondary float-right">View All Tests</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row for Typing Test Results -->
+  <div class="row mb-4">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <h3>Today's Typing Results</h3>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table m-0">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Time (seconds)</th>
+                  <th>Accuracy (%)</th>
+                  <th>Speed (wpm)</th>
+                  <th>Questions Attempted</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% typingResults.forEach(result => { %>
+                  <tr>
+                    <td><%= result.user.username %></td>
+                    <td><%= result.time %> seconds</td>
+                    <td><%= result.accuracy %>%</td>
+                    <td><%= result.speed %> wpm</td>
+                    <td><%= result.questionNumber %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer clearfix">
+          <a href="#" class="btn btn-sm btn-secondary float-right">View All Results</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row for Code Test Results -->
+  <div class="row mb-4">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <h3>Code Test Results</h3>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table m-0">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Test Title</th>
+                  <th>Score</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% results.forEach(result => { %>
+                  <tr>
+                    <td><%= result.email %></td>
+                    <td><%= result.testTitle %></td>
+                    <td><%= result.score %>%</td>
+                    <td>
+                      <span class="badge <%= result.marks=== 100 ? 'badge-success' : 'badge-danger' %>">
+                        <%= result.status %>
+                      </span>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer clearfix">
+          <a href="#" class="btn btn-sm btn-secondary float-right">View All Results</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

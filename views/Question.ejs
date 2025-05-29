@@ -1,0 +1,169 @@
+<%- layout("/layouts/biloperets.ejs") %>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .add-question-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 150px; /* Increase height for larger text area */
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: none; /* Disable resizing */
+        font-size: 16px;
+        margin-bottom: 15px;
+        transition: border-color 0.3s;
+    }
+
+    textarea:focus {
+        border-color: #007BFF; /* Blue border on focus */
+        outline: none; /* Remove default outline */
+    }
+
+    input[type="datetime-local"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-bottom: 15px;
+        transition: border-color 0.3s;
+    }
+
+    input[type="datetime-local"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+        border-color: #007BFF; /* Blue border on focus */
+        outline: none;
+    }
+
+    button {
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+
+    #add-question-output {
+        margin-top: 10px;
+        color: #28a745; /* Green color for success messages */
+    }
+
+    #error-message {
+        margin-top: 10px;
+        color: #dc3545; /* Red color for error messages */
+    }
+</style>
+
+<div class="add-question-container">
+    <h2><%= question ? 'Edit Question' : 'Add Question' %>:</h2>
+    <form id="add-question-form">
+        <textarea name="questionText" required placeholder="Enter your question here..."><%= question ? question.text : '' %></textarea>
+        <input type="datetime-local" name="dueDate" required value="<%= question ? new Date(question.dueDate).toISOString().slice(0, 16) : '' %>">
+        <input type="number" name="timerDuration" required placeholder="Duration (seconds)" value="<%= question ? question.timerDuration : '' %>">
+        <input type="number" name="marks" required placeholder="Marks" value="<%= question ? question.marks : '' %>">
+        
+        <!-- Language selection (C++, Python, etc.) -->
+        <select name="language" required>
+            <option value="cpp" <%= question && question.language === 'cpp' ? 'selected' : '' %>>C++</option>
+            <option value="python" <%= question && question.language === 'python' ? 'selected' : '' %>>Python</option>
+            <option value="java" <%= question && question.language === 'java' ? 'selected' : '' %>>Java</option>
+            <option value="javascript" <%= question && question.language === 'javascript' ? 'selected' : '' %>>JavaScript</option>
+        </select>
+        
+        <button type="submit"><%= question ? 'Update Question' : 'Add Question' %></button>
+    </form>
+    <div id="add-question-output"></div>
+    <div id="error-message"></div> <!-- To display error message if any -->
+</div>
+
+<script>
+    document.getElementById('add-question-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form submission
+    
+    const formData = new FormData(this);
+    const questionText = formData.get('questionText');
+    const dueDate = new Date(formData.get('dueDate')).getTime();
+    const timerDuration = parseInt(formData.get('timerDuration'));
+    const marks = parseInt(formData.get('marks'));
+    const language = formData.get('language');
+
+    const requestData = {
+        questionText: questionText,
+        dueDate: dueDate,
+        timerDuration: timerDuration,
+        marks: marks,
+        language: language
+    };
+
+    const url = '<%= question ? "/edit-question/" + question._id : "/add-question" %>';
+
+    // Send the form data to the server (either for adding or updating)
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+        redirect: 'follow'  // This tells fetch to follow redirects automatically
+    })
+    .then(response => {
+        if (response.redirected) {
+            // Redirect the user after a short delay to show the success message
+            document.getElementById('add-question-output').textContent = 'Question added successfully!';
+            setTimeout(function() {
+                window.location.href = response.url;  // Redirect to the new URL
+            }, 1500); // Delay 1.5 seconds before redirecting
+        } else {
+            return response.json();  // Process normal JSON responses
+        }
+    })
+    .then(data => {
+        // Handle the JSON response from the server (if there was no redirect)
+        if (data && data.message) {
+            document.getElementById('add-question-output').textContent = data.message;
+            document.getElementById('error-message').textContent = '';  // Clear previous errors
+        }
+    })
+    .catch(error => {
+        document.getElementById('error-message').textContent = `Error: ${error.message}`;
+        document.getElementById('add-question-output').textContent = '';  // Clear success message if error
+    });
+});
+
+   
+</script>

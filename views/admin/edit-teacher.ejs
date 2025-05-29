@@ -1,0 +1,45 @@
+<% layout("/layouts/biloperets.ejs") %>
+<link rel="stylesheet" href="/admin/admin.css">
+
+<body>
+    <div class="container">
+        <h1>Edit Teacher</h1>
+        <form action="/edit-teacher/<%= teacher._id %>" method="POST">
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" value="<%= teacher.firstName %>" required>
+            </div>
+            <div class="form-group">
+                <label for="middleName">Middle Name (optional):</label>
+                <input type="text" id="middleName" name="middleName" value="<%= teacher.middleName %>">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" value="<%= teacher.lastName %>" required>
+            </div>
+            <div class="form-group">
+                <label for="fatherName">Father Name:</label>
+                <input type="text" id="fatherName" name="fatherName" value="<%= teacher.fatherName %>" required>
+            </div>
+            <div class="form-group">
+                <label for="motherName">Mother Name (optional):</label>
+                <input type="text" id="motherName" name="motherName" value="<%= teacher.motherName %>">
+            </div>
+            <div class="form-group">
+                <label for="mobileNo">Mobile No.:</label>
+                <input type="text" id="mobileNo" name="mobileNo" value="<%= teacher.mobileNo %>" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea id="address" name="address"><%= teacher.address %></textarea>
+            </div>
+            <button type="submit">Update</button>
+        </form>
+        <% if (error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
+        <% if (success) { %>
+            <p class="success"><%= success %></p>
+        <% } %>
+    </div>
+</body>

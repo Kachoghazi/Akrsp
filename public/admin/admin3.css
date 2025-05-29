@@ -1,0 +1,136 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.title {
+    text-align: center;
+    color: #333;
+}
+
+.exam-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.question {
+    background-color: #f0f8ff;
+    border: 1px solid #b0e0e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.code-output-area {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.code-area {
+    flex: 1;
+    margin-bottom: 20px;
+}
+
+.CodeMirror {
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.run-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.run-button:hover {
+    background-color: #45a049;
+}
+
+.result-area {
+    background-color: #f0f8ff;
+    border: 1px solid #b0e0e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.output-area {
+    white-space: pre-wrap;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    overflow: auto;
+    height: 250px;
+}
+
+.chart-area {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+canvas {
+    border-radius: 5px;
+}
+.output-container {
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: monospace;
+}
+
+.metrics {
+    margin-top: 20px;
+}
+
+.metric {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.metric-title {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.run-button, .submit-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.run-button:hover, .submit-button:hover {
+    background-color: #45a049;
+}
